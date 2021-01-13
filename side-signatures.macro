@@ -1,3 +1,8 @@
+%_file_signing_signer_location /home/puiterwijk/src/ima-keyring-signer/target/debug/keyring-ima-signer
+%_file_signing_signkey signkey
+%_file_signing_cert_location /home/puiterwijk/src/ima-keyring-signer/certificate.der
+%_file_signing_digest_algo sha256
+
 %_file_signatures_template \
 %package file-signatures\
 Summary: IMA signatures for package %{name}\
@@ -13,7 +18,7 @@ This package provides IMA signatures for package %{name}.\
 %{nil}
 
 %__generate_file_signatures \
-/home/puiterwijk/src/ima-keyring-signer/target/debug/keyring-ima-signer signkey /home/puiterwijk/src/ima-keyring-signer/certificate.der sha256 --recursive %{buildroot} | sed -e 's#%{buildroot}##' >signatures.list
+%{_file_signing_signer_location} %{_file_signing_signkey} %{_file_signing_cert_location} %{_file_signing_digest_algo} --recursive %{buildroot} | sed -e 's#%{buildroot}##' >signatures.list
 
 %__os_install_post    \
     %{?__brp_ldconfig} \
