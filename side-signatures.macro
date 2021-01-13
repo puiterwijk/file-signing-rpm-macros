@@ -13,7 +13,7 @@ This package provides IMA signatures for package %{name}.\
 %{nil}
 
 %__generate_file_signatures \
-(cd %{buildroot}; /home/puiterwijk/src/ima-keyring-signer/target/debug/keyring-ima-signer signkey /home/puiterwijk/src/ima-keyring-signer/certificate.der sha256 --recursive . >%{_builddir}/signatures.list)
+/home/puiterwijk/src/ima-keyring-signer/target/debug/keyring-ima-signer signkey /home/puiterwijk/src/ima-keyring-signer/certificate.der sha256 --recursive %{buildroot} | sed -e 's#%{buildroot}##' >signatures.list
 
 %__os_install_post    \
     %{?__brp_ldconfig} \
