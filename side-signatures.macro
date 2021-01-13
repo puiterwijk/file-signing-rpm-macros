@@ -1,0 +1,31 @@
+%_file_signatures_template \
+%package file-signatures\
+Summary: IMA signatures for package %{name}\
+AutoReq: 0\
+AutoProv: 0\
+%description file-signatures\
+This package provides IMA signatures for package %{name}.\
+%files file-signatures -f %{_builddir}/signatures.list\
+%{nil}
+
+%install %{?_enable_file_signatures:%{?_file_signatures_template}} %{?_enable_debug_packages:%{?buildsubdir:%{debug_package}}}\
+%%install\
+%{nil}
+
+%__generate_file_signatures \
+(cd %{buildroot}; /home/puiterwijk/src/ima-keyring-signer/target/debug/keyring-ima-signer signkey /home/puiterwijk/src/ima-keyring-signer/certificate.der sha256 --recursive . >%{_builddir}/signatures.list)
+
+%__os_install_post    \
+    %{?__brp_ldconfig} \
+    %{?__brp_compress} \
+    %{!?__debug_package:\
+    %{?__brp_strip} \
+    %{?__brp_strip_comment_note} \
+    } \
+    %{?__brp_strip_static_archive} \
+    %{?py_auto_byte_compile:%{?__brp_python_bytecompile}} \
+    %{?__brp_python_hardlink} \
+    %{?__brp_mangle_shebangs} \
+# Custom bit\
+    %{?_enable_file_signatures:%{?__generate_file_signatures}} \
+%{nil}
